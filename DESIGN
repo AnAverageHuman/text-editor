@@ -1,16 +1,25 @@
-Arif Roktim, Jeffrey Lin, Richard Nixon (AROOOOOO), Barack Obama
+Arif Roktim, Jeffrey Lin
 
-We are writing a text editor that may have the capability of collaborative editing.
-We will be using a curses interface to display and edit the text.
+Description:
+    We are writing a text editor that may allow collaborative editing.
+    We will be using a curses interface to display and edit the text.
 
-Since we're working with strings, we'll be consistently allocating and reallocating memory.
-We'll be working with files because text editors usually edit the text within files.
-We'll display the statistics about the file (e.g, # of lines, characters, display [RO] flag if read only)
-Make it all asynchronous.
-We will eat the SIGINT signal so the user can save the buffer.
-Read from stdin into buffer if first argument is a '-'
-Will implement server-client design.
-Will keep text buffer in shared memory so that other clients can access it.
-Use of semaphores to handle file access control
+Technical Design:
+    Working with strings requires consistent allocation and reallocation of memory.
+    Text editors usually edit the text within files.
+    Display statistics about the file (e.g., # of lines, characters; display [RO] flag if read only)
+    Make it all asynchronous.
+    Eat the SIGINT signal so the user can save the buffer.
+    Read from stdin into buffer if first argument is a '-'.
+    Will implement server-client design.
+    Will keep text buffer in shared memory so that other clients can access it.
+    Use of semaphores to handle file access control.
 
-Will have a struct to hold rows and have an array of these rows to comprise the text buffer.
+    Work will be done by the person with free time.
+    Contributions by each member should even out.
+
+    Will have a struct to hold the content of a row and an array of these rows comprising the text buffer.
+
+Due Dates:
+    The entire project should be completed before the deadline.
+
