@@ -13,13 +13,14 @@ Technical Design:
     Read from stdin into buffer if first argument is a '-'.
     Will implement server-client design.
     Will keep text buffer in shared memory so that other clients can access it.
-    Use of semaphores to handle file access control.
+    Use of semaphores to handle file access control when saving.
 
     Work will be done by the person with free time.
     Contributions by each member should even out.
 
-    Will have a struct to hold the content of a row and an array of these rows comprising the text buffer.
+    Will have a struct to hold the content of a row and the length of the row, and an array of these rows comprising the text buffer.
 
 Due Dates:
     The entire project should be completed before the deadline.
+    
 
