@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# This WILL overwrite the devlog.txt file!
+# Run on demand rather than on every commit.
+# A git hook could be more useful for version control purposes.
+set -euo pipefail
+
+DEVLOG="$(git rev-parse --show-toplevel)/DEVLOG"
+git log --date=short --pretty="%ad%x09%aN%n%B%n==========%n" > "$DEVLOG"
+
