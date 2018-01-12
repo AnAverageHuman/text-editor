@@ -20,10 +20,11 @@ endif
 
 all: prepare $(EXECUTABLE)
 
-debug: CC=clang
-debug: CFLAGS=-g -Weverything
+#debug: CC=clang
+#debug: CFLAGS=-g -Weverything
+debug: CFLAGS=-g
 debug: clean all
-	clang-tidy $(SRC)
+#	clang-tidy $(SRC)
 
 valgrind: debug
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(EXECUTABLE)
