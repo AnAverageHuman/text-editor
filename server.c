@@ -1,5 +1,7 @@
 #include "networking.h"
 
+extern int loop;
+
 void process(char *s);
 void subserver(int from_client);
 
@@ -16,7 +18,7 @@ void server(){
 
   listen_socket = server_setup();
 
-  while (1) {
+  while(loop) {
 
     //select() modifies read_fds
     //we must reset it at each iteration
@@ -45,6 +47,8 @@ void server(){
       //if you don't read from stdin, it will continue to trigger select()
       fgets(buffer, sizeof(buffer), stdin);
       printf("[server] subserver count: %d\n", subserver_count);
+      if(!strcmp(buffer, "exit\n"))
+        loop = 0;
     }//end stdin select
   }
 
