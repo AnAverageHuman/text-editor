@@ -3,6 +3,14 @@
 
 int loop = 1;
 
+static void sighandler(int signo)
+{
+  if (signo == SIGINT) {
+    printf("\nI've been interrupted, how rude!\n");
+    loop = 0;
+  }
+}
+
 void client( int argc, char *argv[] ){
 
   int server_socket;
@@ -48,7 +56,7 @@ void client( int argc, char *argv[] ){
     //send messages to all the clients, but
     //this would allow for broadcast messages
     if (FD_ISSET(server_socket, &read_fds)) {
-      printf("[Client] Reading from server");
+      //printf("[Client] Reading from server");
       read(server_socket, buffer, sizeof(buffer));
       //printf("[SERVER BROADCAST] [%s]\n", buffer);
       //printf("enter data: ");
@@ -61,16 +69,24 @@ void client( int argc, char *argv[] ){
   
 }
 
+void client_process(){
+  
+}
+
 void print_help(){
   printf("Usage:\n./text-editor --server\n./text-editor --client\n");
 }
 
 int main( int argc, char *argv[] ){
-
+  signal(SIGINT, sighandler);
   if(argc >= 2){
     printf("%s\n", argv[1]);
     if(!strcmp( argv[1], "--server" )){
-      server();
+      if(argc == 3){
+        server();
+      } else {
+        printf("Please specify a file to edit\n");
+      }
     } else if(!strcmp( argv[1], "--client")){
       initscr(); // Initializes curses
       if (has_colors())
