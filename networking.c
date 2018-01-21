@@ -1,19 +1,22 @@
 #include ".h"
 #include "networking.h"
 
+int sd;
+int i;
+
+struct addrinfo *hints;
+struct addrinfo *results;
+
 /* creates, binds a server side socket and sets it to the listening state
  * returns the socket descriptor
  */
 int server_setup() {
-  int sd, i;
 
   //create the socket
   sd = socket(AF_INET, SOCK_STREAM, 0);
   errno_handler(errno);
 
   //setup structs for getaddrinfo
-  struct addrinfo *hints;
-  struct addrinfo *results;
   hints = (struct addrinfo *) calloc(1, sizeof(struct addrinfo));
   hints->ai_family = AF_INET;  //IPv4 address
   hints->ai_socktype = SOCK_STREAM;  //TCP socket
@@ -64,16 +67,15 @@ int server_connect(int sd) {
  * returns the file descriptor for the socket
  */
 int client_setup() {
-  int sd;
-  int i;
-
   //create the socket
   sd = socket(AF_INET, SOCK_STREAM, 0);
   errno_handler(errno);
+  return sd;
+}
 
+int client_connect(int sd) {
   //run getaddrinfo
   // hints->ai_flags not needed because client specifies desired address.
-  struct addrinfo * hints, * results;
   hints = (struct addrinfo *) calloc(1, sizeof(struct addrinfo));
   hints->ai_family = AF_INET;  //IPv4
   hints->ai_socktype = SOCK_STREAM;  //TCP socket
@@ -86,7 +88,6 @@ int client_setup() {
 
   free(hints);
   freeaddrinfo(results);
-
-  return sd;
+  return i;
 }
 
