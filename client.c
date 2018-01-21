@@ -11,6 +11,7 @@ static void sighandler(int signo) {
 
 void client(const char *ip, const char *port) {
   signal(SIGINT, sighandler);
+  signal(SIGPIPE, SIG_IGN);
   initscr(); // Initializes curses
   if (has_colors()) {
     start_color();
@@ -30,11 +31,6 @@ void client(const char *ip, const char *port) {
 
   while(loop){
 
-    //printf("enter data: ");
-    ////the above printf does not have \n
-    ////flush the buffer to immediately print
-    //fflush(stdout);
-
     //select() modifies read_fds
     //we must reset it at each iteration
     FD_ZERO(&read_fds);
@@ -45,14 +41,10 @@ void client(const char *ip, const char *port) {
     select(server_socket + 1, &read_fds, NULL, NULL, NULL);
 
     if (FD_ISSET(STDIN_FILENO, &read_fds)) {
-      //printf("[Client] Reading from stdin");
-
       ch[0] = getch();
       ch[1] = 0;
-      //printf("%c", ch);
-      //*strchr(buffer, '\n') = 0;
-      write(server_socket, ch, sizeof(ch));
-      read(server_socket, ch, sizeof(ch));
+      send(server_socket, ch, sizeof(ch), 0);
+      recv(server_socket, ch, sizeof(ch), 0);
       //printf("received: [%s]\n", buffer);
     }//end stdin select
 
@@ -61,7 +53,7 @@ void client(const char *ip, const char *port) {
     //this would allow for broadcast messages
     if (FD_ISSET(server_socket, &read_fds)) {
       //printf("[Client] Reading from server");
-      read(server_socket, buffer, sizeof(buffer));
+      recv(server_socket, buffer, sizeof(buffer), 0);
       //printf("[SERVER BROADCAST] [%s]\n", buffer);
       //printf("enter data: ");
       //the above printf does not have \n
