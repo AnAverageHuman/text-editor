@@ -1,43 +1,35 @@
+#include ".h"
 #include "networking.h"
 
-void error_check( int i, char *s ) {
-  if ( i < 0 ) {
-    printf("[%s] error %d: %s\n", s, errno, strerror(errno) );
-    exit(1);
-  }
-}
-
-/*=========================
-  server_setup
-  args:
-
-  creates, binds a server side socket
-  and sets it to the listening state
-
-  returns the socket descriptor
-  =========================*/
-int server_setup(const char *ip, const char *port) {
+/* creates, binds a server side socket and sets it to the listening state
+ * returns the socket descriptor
+ */
+int server_setup() {
   int sd, i;
 
   //create the socket
-  sd = socket( AF_INET, SOCK_STREAM, 0 );
-  error_check( sd, "server socket" );
+  sd = socket(AF_INET, SOCK_STREAM, 0);
+  errno_handler(errno);
 
   //setup structs for getaddrinfo
-  struct addrinfo * hints, * results;
-  hints = (struct addrinfo *)calloc(1, sizeof(struct addrinfo));
+  struct addrinfo *hints;
+  struct addrinfo *results;
+  hints = (struct addrinfo *) calloc(1, sizeof(struct addrinfo));
   hints->ai_family = AF_INET;  //IPv4 address
   hints->ai_socktype = SOCK_STREAM;  //TCP socket
   hints->ai_flags = AI_PASSIVE;  //Use all valid addresses
-  getaddrinfo(ip, port, hints, &results); //NULL means use local address
+  getaddrinfo(arguments.ip, arguments.port, hints, &results);
 
   //bind the socket to address and port
-  i = bind( sd, results->ai_addr, results->ai_addrlen );
-  error_check( i, "server bind" );
+  i = bind(sd, results->ai_addr, results->ai_addrlen);
+  if (errno_handler(errno) == EACCES) {
+    fprintf(stderr, "Permission denied while trying to bind to port %s.\n",
+        arguments.port);
+  }
 
   //set socket to listen state
   i = listen(sd, 10);
-  error_check( i, "server listen" );
+  errno_handler(errno);
 
   struct sockaddr_in sin;
   socklen_t sinlen = sizeof(sin);
@@ -51,17 +43,10 @@ int server_setup(const char *ip, const char *port) {
   return sd;
 }
 
-
-/*=========================
-  server_connect
-  args: int sd
-
-  sd should refer to a socket in the listening state
-  run the accept call
-
-  returns the socket descriptor for the new socket connected
-  to the client.
-  =========================*/
+/* sd should refer to a socket in the listening state
+ * runs the accept call; returns the socket descriptor for the new socket
+ * connected to the client.
+ */
 int server_connect(int sd) {
   int client_socket;
   socklen_t sock_size;
@@ -69,43 +54,35 @@ int server_connect(int sd) {
   sock_size = sizeof(client_address);
 
   client_socket = accept(sd, (struct sockaddr *)&client_address, &sock_size);
-  error_check(client_socket, "server accept");
-
+  errno_handler(errno);
 
   return client_socket;
 }
 
-/*=========================
-  client_setup
-  args: int * to_server
-
-  to_server is a string representing the server address
-
-  create and connect a socket to a server socket that is
-  in the listening state
-
-  returns the file descriptor for the socket
-  =========================*/
-int client_setup(const char *ip, const char *port) {
-  int sd, i;
+/* to_server is a string representing the server address
+ * create and connect a socket to a server socket that is in the listening state
+ * returns the file descriptor for the socket
+ */
+int client_setup() {
+  int sd;
+  int i;
 
   //create the socket
-  sd = socket( AF_INET, SOCK_STREAM, 0 );
-  error_check( sd, "client socket" );
+  sd = socket(AF_INET, SOCK_STREAM, 0);
+  errno_handler(errno);
 
   //run getaddrinfo
-  /* hints->ai_flags not needed because the client
-     specifies the desired address. */
+  // hints->ai_flags not needed because client specifies desired address.
   struct addrinfo * hints, * results;
-  hints = (struct addrinfo *)calloc(1, sizeof(struct addrinfo));
+  hints = (struct addrinfo *) calloc(1, sizeof(struct addrinfo));
   hints->ai_family = AF_INET;  //IPv4
   hints->ai_socktype = SOCK_STREAM;  //TCP socket
-  getaddrinfo(ip, port, hints, &results);
+  getaddrinfo(arguments.ip, arguments.port, hints, &results);
 
   //connect to the server
   //connect will bind the socket for us
-  i = connect( sd, results->ai_addr, results->ai_addrlen );
-  error_check( i, "client connect" );
+  i = connect(sd, results->ai_addr, results->ai_addrlen);
+  errno_handler(errno);
 
   free(hints);
   freeaddrinfo(results);

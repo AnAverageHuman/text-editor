@@ -4,6 +4,7 @@ const char doc[] = "a text editor with the ability to edit over networks"
                    "\vClients must specify the port number to connect to.\n"
                    "Servers must specify the name of the file to edit.";
 static char args_doc[] = "file";
+struct arguments arguments = {0, "0.0.0.0", 0, 0};
 
 static struct argp_option options[] = {
   {"server", 's', 0     , 0, "enable server functionality"}        ,
@@ -11,13 +12,6 @@ static struct argp_option options[] = {
   {"port"  , 'p', "port", 0, "the port to bind or connect to"}     ,
   {"file"  , 'f', "file", 0, "the file to edit (server mode only)"},
   {0}
-};
-
-struct arguments {
-  char servermode; // boolean
-  char *ip;        // string
-  char *port;      // port
-  char *filename;
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
@@ -48,7 +42,6 @@ static struct argp argp = {options, parse_opt, args_doc, doc};
 char loop = 1;
 
 int main( int argc, char *argv[] ){
-  struct arguments arguments = {0, "0.0.0.0", 0, 0};
   argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
   if (! (arguments.servermode || arguments.port) ) {
@@ -61,9 +54,9 @@ int main( int argc, char *argv[] ){
 
 
   if (arguments.servermode) {
-    server(arguments.ip, arguments.port, arguments.filename);
+    server();
   } else {
-    client(arguments.ip, arguments.port);
+    client();
   }
 
   return 0;
