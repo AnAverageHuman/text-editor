@@ -1,6 +1,10 @@
 #include ".h"
 #include "networking.h"
 
+#define RETRY_TIMER 10
+
+int server_socket;
+
 static void sighandler(int signo) {
   switch (signo) {
     case SIGINT:
@@ -22,7 +26,6 @@ void client() {
   keypad(stdscr, TRUE); // Enable geting input of arrow keys
   nodelay(stdscr, false);
 
-  int server_socket;
   char buffer[BUFFER_SIZE];
 
   char ch[2] = {0, 0};
@@ -31,7 +34,12 @@ void client() {
   fprintf(stderr, "Connecting to text-editord running on %s:%s\n",
       arguments.ip,
       arguments.port);
+
   server_socket = client_setup();
+  while (client_connect(server_socket) == -1) {
+    fprintf(stderr, "Failed to connect, retrying in %d seconds", RETRY_TIMER);
+    sleep(RETRY_TIMER);
+  }
 
   while(loop){
 
