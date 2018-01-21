@@ -14,6 +14,7 @@ void subserver(int client_socket);
 
 void server(const char *ip, const char *port, const char *filename) {
   signal(SIGINT, sighandler);
+  signal(SIGPIPE, SIG_IGN);
   int listen_socket;
   int client_socket;
   int f;
@@ -66,7 +67,7 @@ void subserver(int client_socket) {
   strncpy(buffer, "hello client", sizeof(buffer));
   write(client_socket, buffer, sizeof(buffer));
 
-  while (read(client_socket, buffer, sizeof(buffer))) {
+  while (recv(client_socket, buffer, sizeof(buffer), 0)) {
 
     printf("[subserver %d] received: [%s]\n", getpid(), buffer);
     process(buffer);
@@ -85,3 +86,4 @@ void process(char * s) {
     s++;
   }
 }
+
