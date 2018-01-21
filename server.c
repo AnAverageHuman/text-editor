@@ -12,7 +12,7 @@ static void sighandler(int signo) {
 void process(char *s);
 void subserver(int client_socket);
 
-void server(const char *ip, const char *port, const char *filename) {
+void server() {
   signal(SIGINT, sighandler);
   signal(SIGPIPE, SIG_IGN);
   int listen_socket;
@@ -24,7 +24,7 @@ void server(const char *ip, const char *port, const char *filename) {
   //set of file descriptors to read from
   fd_set read_fds;
 
-  listen_socket = server_setup(ip, port);
+  listen_socket = server_setup();
 
   while(loop) {
 

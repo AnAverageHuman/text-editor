@@ -10,12 +10,21 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+struct arguments {
+  char servermode; // boolean
+  char *ip;        // string
+  char *port;      // port
+  char *filename;
+};
+
 extern char loop;
+extern struct arguments arguments;
 
 void die(const char *string, char x);
+int errno_handler(int en);
 
-void client(const char *ip, const char *port);
-void server(const char *ip, const char *port, const char *filename);
+void client();
+void server();
 
 #endif
 

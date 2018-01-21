@@ -15,9 +15,9 @@
 #define BUFFER_SIZE 256
 
 void error_check(int i, char *s);
-int server_setup(const char *ip, const char *port);
+int server_setup();
 int server_connect(int sd);
-int client_setup(const char *ip, const char *port);
+int client_setup();
 
 #endif
 

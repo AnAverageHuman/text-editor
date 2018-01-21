@@ -9,7 +9,8 @@ static void sighandler(int signo) {
   }
 }
 
-void client(const char *ip, const char *port) {
+
+void client() {
   signal(SIGINT, sighandler);
   signal(SIGPIPE, SIG_IGN);
   initscr(); // Initializes curses
@@ -27,7 +28,10 @@ void client(const char *ip, const char *port) {
   char ch[2] = {0, 0};
   fd_set read_fds;
 
-  server_socket = client_setup(ip, port);
+  fprintf(stderr, "Connecting to text-editord running on %s:%s\n",
+      arguments.ip,
+      arguments.port);
+  server_socket = client_setup();
 
   while(loop){
 
