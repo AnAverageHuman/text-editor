@@ -48,7 +48,7 @@ static struct argp argp = {options, parse_opt, args_doc, doc};
 char loop = 1;
 
 int main( int argc, char *argv[] ){
-  struct arguments arguments = {0, "127.0.0.1", 0, 0};
+  struct arguments arguments = {0, "0.0.0.0", 0, 0};
   argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
   if (! (arguments.servermode || arguments.port) ) {
