@@ -1,12 +1,19 @@
+#include ".h"
 #include "networking.h"
 
-extern int loop;
+static void sighandler(int signo) {
+  switch (signo) {
+    case SIGINT:
+      printf("Interrupted.\n");
+      loop = 0;
+  }
+}
 
 void process(char *s);
-void subserver(int from_client);
+void subserver(int client_socket);
 
-void server(){
-
+void server(const char *ip, const char *port, const char *filename) {
+  signal(SIGINT, sighandler);
   int listen_socket;
   int client_socket;
   int f;
@@ -16,7 +23,7 @@ void server(){
   //set of file descriptors to read from
   fd_set read_fds;
 
-  listen_socket = server_setup();
+  listen_socket = server_setup(ip, port);
 
   while(loop) {
 
@@ -33,12 +40,11 @@ void server(){
     if (FD_ISSET(listen_socket, &read_fds)) {
       client_socket = server_connect(listen_socket);
 
-      f = fork();
-      if (f == 0)
-        subserver(client_socket);
-      else {
+      if (fork()) {
         subserver_count++;
         close(client_socket);
+      } else {
+        subserver(client_socket);
       }
     }//end listen_socket select
 
@@ -51,7 +57,6 @@ void server(){
         loop = 0;
     }//end stdin select
   }
-
 }
 
 void subserver(int client_socket) {
