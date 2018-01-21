@@ -9,7 +9,6 @@ static void sighandler(int signo) {
   }
 }
 
-void process(char *s);
 void subserver(int client_socket);
 
 void server() {
@@ -70,20 +69,9 @@ void subserver(int client_socket) {
   while (recv(client_socket, buffer, sizeof(buffer), 0)) {
 
     printf("[subserver %d] received: [%s]\n", getpid(), buffer);
-    process(buffer);
     write(client_socket, buffer, sizeof(buffer));
   }//end read loop
   close(client_socket);
   exit(0);
-}
-
-void process(char * s) {
-  while (*s) {
-    if (*s >= 'a' && *s <= 'z')
-      *s = ((*s - 'a') + 13) % 26 + 'a';
-    else  if (*s >= 'A' && *s <= 'Z')
-      *s = ((*s - 'a') + 13) % 26 + 'a';
-    s++;
-  }
 }
 
