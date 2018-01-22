@@ -9,7 +9,21 @@ static void sighandler(int signo) {
   }
 }
 
-void subserver(int client_socket);
+void subserver(int client_socket) {
+  char buffer[BUFFER_SIZE];
+
+  //for testing client select statement
+  strncpy(buffer, "hello client", sizeof(buffer));
+  write(client_socket, buffer, sizeof(buffer));
+
+  while (recv(client_socket, buffer, sizeof(buffer), 0)) {
+
+    printf("[subserver %d] received: [%s]\n", getpid(), buffer);
+    write(client_socket, buffer, sizeof(buffer));
+  }//end read loop
+  close(client_socket);
+  exit(0);
+}
 
 void server() {
   signal(SIGINT, sighandler);
@@ -57,21 +71,5 @@ void server() {
         loop = 0;
     }//end stdin select
   }
-}
-
-void subserver(int client_socket) {
-  char buffer[BUFFER_SIZE];
-
-  //for testing client select statement
-  strncpy(buffer, "hello client", sizeof(buffer));
-  write(client_socket, buffer, sizeof(buffer));
-
-  while (recv(client_socket, buffer, sizeof(buffer), 0)) {
-
-    printf("[subserver %d] received: [%s]\n", getpid(), buffer);
-    write(client_socket, buffer, sizeof(buffer));
-  }//end read loop
-  close(client_socket);
-  exit(0);
 }
 

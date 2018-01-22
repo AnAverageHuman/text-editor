@@ -1,3 +1,6 @@
+#ifndef NETWORKING_H
+#define NETWORKING_H
+
 #include <arpa/inet.h>
 #include <errno.h>
 #include <netdb.h>
@@ -8,9 +11,6 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-
-#ifndef NETWORKING_H
-#define NETWORKING_H
 
 #define BUFFER_SIZE 256
 
