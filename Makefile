@@ -1,9 +1,10 @@
 OBJDIR := build
 EXECUTABLE := text-editor
 CLEANTARGETS := $(OBJDIR) $(EXECUTABLE)
+GITVERSION := $(shell git describe --dirty --broken --tags --always)
 
 SRC := $(wildcard *.c)
-OBJ := $(addprefix $(OBJDIR)/, $(SRC:.c=.o))
+OBJ := $(addprefix $(OBJDIR)/, $(SRC:.c=.o) gitversion.o)
 LDLIBS := -lcurses
 
 
@@ -16,7 +17,8 @@ ifneq ($(V),)
 	Q = true ||
 endif
 
-.PHONY: all debug valgrind gdb clean prepare run devlog
+.PHONY: all debug valgrind gdb clean prepare run devlog gitversion.c
+.INTERMEDIATE: gitversion.c
 
 all: prepare $(EXECUTABLE)
 
@@ -45,6 +47,10 @@ run: all
 devlog:
 	@$(Q)echo "  MKDEVLOG	DEVLOG"
 	@housekeeping/mkdevlog
+
+gitversion.c: .git/HEAD .git/index
+	@$(Q)echo "  VERSION	$@"
+	@echo "const char *argp_program_version = \"$(GITVERSION)\";" > $@
 
 $(EXECUTABLE): $(OBJ)
 	@$(Q)echo "  LD		$@"

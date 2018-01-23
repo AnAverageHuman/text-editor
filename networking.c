@@ -37,8 +37,8 @@ int server_setup() {
   struct sockaddr_in sin;
   socklen_t sinlen = sizeof(sin);
   getsockname(sd, (struct sockaddr *) &sin, &sinlen);
-  printf("This is text-editord, running on port %d\n",
-      ntohs(sin.sin_port));
+  printf("This is text-editord version %s, running on port %d\n",
+      argp_program_version, ntohs(sin.sin_port));
 
   //free the structs used by getaddrinfo
   free(hints);

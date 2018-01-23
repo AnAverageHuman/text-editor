@@ -1,5 +1,6 @@
 #include ".h"
 
+const char *argp_program_bug_address = "anaveragehuman AT icurse DOT nl";
 const char doc[] = "a text editor with the ability to edit over networks"
                    "\vClients must specify the port number to connect to.\n"
                    "Servers must specify the name of the file to edit.";
