@@ -17,7 +17,7 @@ int server_setup() {
   errno_handler(errno);
 
   //setup structs for getaddrinfo
-  hints = (struct addrinfo *) calloc(1, sizeof(struct addrinfo));
+  hints = calloc(1, sizeof(*hints));
   hints->ai_family = AF_INET;  //IPv4 address
   hints->ai_socktype = SOCK_STREAM;  //TCP socket
   hints->ai_flags = AI_PASSIVE;  //Use all valid addresses
@@ -76,7 +76,7 @@ int client_setup() {
 int client_connect(int sd) {
   //run getaddrinfo
   // hints->ai_flags not needed because client specifies desired address.
-  hints = (struct addrinfo *) calloc(1, sizeof(struct addrinfo));
+  hints = calloc(1, sizeof(*hints));
   hints->ai_family = AF_INET;  //IPv4
   hints->ai_socktype = SOCK_STREAM;  //TCP socket
   getaddrinfo(arguments.ip, arguments.port, hints, &results);
