@@ -1,3 +1,5 @@
+#include <msgpack.h>
+
 #include ".h"
 
 /* Simple buffer specification:
@@ -61,5 +63,19 @@ node *read_into_buffer(node *buf, char *filename) {
   errno_handler(errno);
   fclose(fp);
   return buf;
+}
+
+msgpack_sbuffer *sbuf;
+msgpack_packer *pkr;
+msgpack_unpacked unpackedbuf;
+
+void create_msgpack() {
+  sbuf = msgpack_sbuffer_new(); // init buffer
+  pkr = msgpack_packer_new(sbuf, msgpack_sbuffer_write); // init packer
+}
+
+void remove_msgpack() {
+  msgpack_sbuffer_free(sbuf);
+  msgpack_packer_free(pkr);
 }
 
