@@ -5,7 +5,11 @@
 
 int server_socket;
 node *thebuffer;
+char *statusbarc;
+char *commandlinec;
 
+WINDOW *statusbarw;
+WINDOW *commandlinew;
 int col;
 int row;
 
@@ -27,6 +31,13 @@ void init_screen() {
   noecho(); // Don't echo characters
   keypad(stdscr, TRUE); // Enable geting input of arrow keys
   nodelay(stdscr, false);
+
+  getmaxyx(stdscr, col, row);
+  statusbarw = newwin(1, row - 2, 0, 0);
+  commandlinew = newwin(1, row - 1, 0, 0);
+
+  statusbarc = malloc(sizeof(char) * col);
+  commandlinec = malloc(sizeof(char) * col);
 }
 
 void destroy_screen() {
@@ -47,6 +58,8 @@ void redraw() {
     tmpr++;
   }
 
+  waddnstr(statusbarw, statusbarc, col); // status bar
+  waddnstr(commandlinew, commandlinec, col); // command line
   refresh();
 }
 
