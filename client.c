@@ -29,6 +29,14 @@ void init_screen() {
   nodelay(stdscr, false);
 }
 
+void destroy_screen() {
+  delwin(statusbarw);
+  delwin(commandlinew);
+  free(statusbarc);
+  free(commandlinec);
+  endwin(); // close window
+}
+
 void redraw() {
   node *cur = thebuffer;
   getmaxyx(stdscr, row, col);
@@ -105,6 +113,6 @@ void client() {
 
 */
 
-  endwin(); // Close window
+  destroy_screen();
 }
 
