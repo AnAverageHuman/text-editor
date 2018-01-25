@@ -29,17 +29,34 @@ void init_screen() {
   nodelay(stdscr, false);
 }
 
+void redraw() {
+  node *cur = thebuffer;
+  getmaxyx(stdscr, row, col);
+  int tmpr = 0;
+  while (cur && tmpr < row) { // main window
+    mvwaddnstr(stdscr, tmpr, 0, cur->contents, min(col, cur->length));
+    cur = cur->next;
+    tmpr++;
+  }
+
+  refresh();
+}
+
 void client() {
   signal(SIGINT, sighandler);
   signal(SIGPIPE, SIG_IGN);
 
   thebuffer = init_buffer(0, 1);
+  if (arguments.filename) {
+    read_into_buffer(thebuffer, arguments.filename);
+  }
 
   char buffer[BUFFER_SIZE];
   char ch[2] = {0, 0};
   fd_set read_fds;
 
   init_screen();
+  redraw();
 
 /*
   fprintf(stderr, "Connecting to text-editord running on %s:%s\n",
