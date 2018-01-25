@@ -11,7 +11,6 @@
 #include <unistd.h>
 
 struct arguments {
-  char servermode; // boolean
   char *ip;        // string
   char *port;      // port
   char *filename;

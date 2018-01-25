@@ -31,6 +31,7 @@ void client() {
   char ch[2] = {0, 0};
   fd_set read_fds;
 
+/*
   fprintf(stderr, "Connecting to text-editord running on %s:%s\n",
       arguments.ip,
       arguments.port);
@@ -74,6 +75,8 @@ void client() {
     }//end socket select
 
   }//end loop
+
+*/
 
   endwin(); // Close window
 }
