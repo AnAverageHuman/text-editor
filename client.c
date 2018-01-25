@@ -4,6 +4,10 @@
 #define RETRY_TIMER 10
 
 int server_socket;
+node *thebuffer;
+
+int col;
+int row;
 
 static void sighandler(int signo) {
   switch (signo) {
@@ -13,11 +17,9 @@ static void sighandler(int signo) {
   }
 }
 
+void init_screen() {
+  initscr();
 
-void client() {
-  signal(SIGINT, sighandler);
-  signal(SIGPIPE, SIG_IGN);
-  initscr(); // Initializes curses
   if (has_colors()) {
     start_color();
   }
@@ -25,11 +27,19 @@ void client() {
   noecho(); // Don't echo characters
   keypad(stdscr, TRUE); // Enable geting input of arrow keys
   nodelay(stdscr, false);
+}
+
+void client() {
+  signal(SIGINT, sighandler);
+  signal(SIGPIPE, SIG_IGN);
+
+  thebuffer = init_buffer(0, 1);
 
   char buffer[BUFFER_SIZE];
-
   char ch[2] = {0, 0};
   fd_set read_fds;
+
+  init_screen();
 
 /*
   fprintf(stderr, "Connecting to text-editord running on %s:%s\n",
