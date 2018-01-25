@@ -12,6 +12,9 @@ WINDOW *statusbarw;
 WINDOW *commandlinew;
 int col;
 int row;
+int currentc;
+int currentr;
+node *currentnode;
 
 static void sighandler(int signo) {
   switch (signo) {
@@ -60,6 +63,7 @@ void redraw() {
 
   waddnstr(statusbarw, statusbarc, col); // status bar
   waddnstr(commandlinew, commandlinec, col); // command line
+  move(currentr, currentc);
   refresh();
 }
 
@@ -67,17 +71,47 @@ void client() {
   signal(SIGINT, sighandler);
   signal(SIGPIPE, SIG_IGN);
 
-  thebuffer = init_buffer(0, 1);
+  currentnode = thebuffer = init_buffer(0, 1);
   if (arguments.filename) {
     read_into_buffer(thebuffer, arguments.filename);
   }
 
   char buffer[BUFFER_SIZE];
-  char ch[2] = {0, 0};
+  int ch[2] = {0, 0};
   fd_set read_fds;
 
   init_screen();
   redraw();
+
+  while (loop) {
+    switch(ch[0] = getch()) {
+      case KEY_UP:
+        if (currentnode->prev) {
+          currentr--;
+          currentnode = currentnode->prev;
+          currentc = min(currentc, currentnode->length - 1);
+        }
+        break;
+      case KEY_DOWN:
+        if (currentnode->next) {
+          currentr++;
+          currentnode = currentnode->next;
+          currentc = min(currentc, currentnode->length - 1);
+        }
+        break;
+      case KEY_LEFT:
+        if (currentc > 0) {
+          currentc--;
+        }
+        break;
+      case KEY_RIGHT:
+        if (currentc < currentnode->length - 1) {
+          currentc++;
+        }
+        break;
+    }
+    move(currentr, currentc);
+  }
 
 /*
   fprintf(stderr, "Connecting to text-editord running on %s:%s\n",
