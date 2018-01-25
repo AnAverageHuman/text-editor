@@ -19,6 +19,18 @@ struct arguments {
 extern char loop;
 extern struct arguments arguments;
 
+typedef struct node {
+  unsigned long long length;    // actual length
+  unsigned long long allocated; // amount allocated
+  char *contents;
+  struct node *prev;
+  struct node *next;
+} node;
+
+node *add_node(node *buf, node *prev, node *next, char *contents,
+    long long length, long long allocd);
+node *init_buffer(node *buf, unsigned long long rows);
+
 void die(const char *string, char x);
 int errno_handler(int en);
 
