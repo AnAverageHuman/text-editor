@@ -23,6 +23,19 @@ node *add_node(node *buf, node *prev, node *next, char *contents,
   return buf;
 }
 
+node *add_char_to_node(node *buf, char character, long long pos) {
+  if (buf->length == buf->allocated) {
+    buf->contents = realloc(buf->contents,
+        (buf->length + 1) * sizeof(buf->contents[0]));
+    buf->allocated++;
+  }
+
+  memmove(buf->contents + pos + 1, buf->contents + pos, buf->length - pos + 1);
+  buf->contents[pos] = character;
+  buf->length++;
+  return buf;
+}
+
 node *init_buffer(node *buf, unsigned long long rows) {
   buf = add_node(malloc(sizeof(*buf)), 0, 0, 0, 0, 0);
   long long i;
