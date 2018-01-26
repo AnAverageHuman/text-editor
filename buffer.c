@@ -36,6 +36,12 @@ node *add_char_to_node(node *buf, char character, long long pos) {
   return buf;
 }
 
+node *del_char_from_node(node *buf, long long pos) {
+  memmove(buf->contents + pos - 1, buf->contents + pos, buf->length - pos + 1);
+  buf->length--;  // don't reallocate as that's expensive
+  return buf;
+}
+
 node *init_buffer(node *buf, unsigned long long rows) {
   buf = add_node(malloc(sizeof(*buf)), 0, 0, 0, 0, 0);
   long long i;

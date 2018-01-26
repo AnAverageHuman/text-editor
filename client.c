@@ -53,6 +53,8 @@ void destroy_screen() {
 
 void redraw_line(node *buf, int r, char m) {
   mvwaddnstr(stdscr, r, 0, buf->contents, min(col, buf->length));
+  move(r, buf->length);
+  clrtoeol();
   if (m) {
     move(currentr, currentc);
   }
@@ -114,6 +116,13 @@ void client() {
       case KEY_RIGHT:
         if (currentc < currentnode->length - 1) {
           currentc++;
+        }
+        break;
+      case KEY_BACKSPACE:
+        if (currentnode->contents[currentc - 1]) {
+          del_char_from_node(currentnode, currentc);
+          redraw_line(currentnode, currentr, 1);
+          currentc--;
         }
         break;
       default: // probably a "normal" character

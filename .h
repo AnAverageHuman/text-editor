@@ -33,6 +33,7 @@ typedef struct node {
 node *add_node(node *buf, node *prev, node *next, char *contents,
     long long length, long long allocd);
 node *add_char_to_node(node *buf, char character, long long pos);
+node *del_char_from_node(node *buf, long long pos);
 node *init_buffer(node *buf, unsigned long long rows);
 node *read_into_buffer(node *buf, char *filename);
 
