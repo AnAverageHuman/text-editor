@@ -51,12 +51,19 @@ void destroy_screen() {
   endwin(); // close window
 }
 
-void redraw() {
+void redraw_line(node *buf, int r, char m) {
+  mvwaddnstr(stdscr, r, 0, buf->contents, min(col, buf->length));
+  if (m) {
+    move(currentr, currentc);
+  }
+}
+
+void redraw_all() {
   node *cur = thebuffer;
   getmaxyx(stdscr, row, col);
   int tmpr = 0;
   while (cur && tmpr < row) { // main window
-    mvwaddnstr(stdscr, tmpr, 0, cur->contents, min(col, cur->length));
+    redraw_line(cur, tmpr, 0);
     cur = cur->next;
     tmpr++;
   }
@@ -81,7 +88,7 @@ void client() {
   fd_set read_fds;
 
   init_screen();
-  redraw();
+  redraw_all();
 
   while (loop) {
     switch(ch[0] = getch()) {
@@ -108,6 +115,11 @@ void client() {
         if (currentc < currentnode->length - 1) {
           currentc++;
         }
+        break;
+      default: // probably a "normal" character
+        add_char_to_node(currentnode, ch[0], currentc);
+        redraw_line(currentnode, currentr, 1);
+        currentc++;
         break;
     }
     move(currentr, currentc);
