@@ -10,7 +10,7 @@
  */
 
 node *add_node(node *buf, node *prev, node *next, char *contents,
-    long long length, long long allocd) {
+    unsigned long long length, unsigned long long allocd) {
   if (prev) {
     prev->next = buf;
     buf->prev = prev;
@@ -25,7 +25,7 @@ node *add_node(node *buf, node *prev, node *next, char *contents,
   return buf;
 }
 
-node *add_char_to_node(node *buf, char character, long long pos) {
+node *add_char_to_node(node *buf, char character, unsigned long long pos) {
   if (buf->length == buf->allocated) {
     buf->contents = realloc(buf->contents,
         sizeof(buf->contents[0]) * (buf->allocated + REALLOC_CHUNK));
@@ -38,7 +38,7 @@ node *add_char_to_node(node *buf, char character, long long pos) {
   return buf;
 }
 
-node *del_char_from_node(node *buf, long long pos) {
+node *del_char_from_node(node *buf, unsigned long long pos) {
   memmove(buf->contents + pos - 1, buf->contents + pos, buf->length - pos + 1);
   buf->length--;  // don't reallocate as that's expensive
   return buf;
@@ -46,7 +46,7 @@ node *del_char_from_node(node *buf, long long pos) {
 
 node *init_buffer(node *buf, unsigned long long rows) {
   buf = add_node(malloc(sizeof(*buf)), 0, 0, 0, 0, 0);
-  long long i;
+  unsigned long long i;
 
   node *prev = buf;
   for (i = 0; i < rows - 1; i++) {

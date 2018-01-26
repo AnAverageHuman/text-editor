@@ -12,8 +12,8 @@ WINDOW *statusbarw;
 WINDOW *commandlinew;
 int col;
 int row;
-int currentc;
-int currentr;
+unsigned long long currentc;
+unsigned long long currentr;
 node *currentnode;
 
 static void sighandler(int signo) {
