@@ -1,0 +1,209 @@
+2018-01-26	Jeffrey Lin
+client.c: enable use of the return key
+
+==========
+
+2018-01-26	Jeffrey Lin
+README.md: update file
+
+==========
+
+2018-01-26	Jeffrey Lin
+These long longs should have been unsigned
+
+==========
+
+2018-01-26	Jeffrey Lin
+client.c: proceed only if we are on a TTY
+
+==========
+
+2018-01-26	Jeffrey Lin
+client.c: make sure windows are destroyed on exit
+
+==========
+
+2018-01-26	Jeffrey Lin
+buffer.c: fix node size reallocation
+
+Possibly due to pointer multiplication.
+
+==========
+
+2018-01-26	Jeffrey Lin
+buffer.c: implement deleting from nodes in buffers
+
+==========
+
+2018-01-25	Jeffrey Lin
+client.c: enable adding to nodes in the buffer
+
+==========
+
+2018-01-25	Jeffrey Lin
+client.c: enable moving of the cursor
+
+==========
+
+2018-01-24	Jeffrey Lin
+client.c: add a status bar and a command line
+
+Doesn't currently do anything.
+
+==========
+
+2018-01-24	Jeffrey Lin
+client.c: free screen memory before exiting
+
+==========
+
+2018-01-24	Jeffrey Lin
+buffer.c: add mechanism to read text into buffer
+
+==========
+
+2018-01-24	Jeffrey Lin
+buffer.c: add the concept of buffers and nodes
+
+See buffer.c for specifics.
+
+==========
+
+2018-01-24	Jeffrey Lin
+Remove the concept of server/client mode
+
+The text editor should always run in client mode, and enable server mode
+when requested.
+
+==========
+
+2018-01-24	Jeffrey Lin
+networking.c: Don't cast return type of alloc()
+
+==========
+
+2018-01-23	Jeffrey Lin
+Makefile: add version information
+
+==========
+
+2018-01-21	Jeffrey Lin
+Cleanup
+
+Move header guard up and shift layout of function definitions.
+
+==========
+
+2018-01-21	Jeffrey Lin
+server.c: remove unused process() function
+
+==========
+
+2018-01-21	Jeffrey Lin
+client.c: retry connection until success
+
+==========
+
+2018-01-21	Jeffrey Lin
+Improve argument handling
+
+- Declare arguments as extern so we don't have to pass it around.
+
+- Handle errors rather than bail out.
+
+==========
+
+2018-01-21	Jeffrey Lin
+Use 0.0.0.0 instead of 127.0.0.1 as default IP
+
+It's more useful than 127.0.0.1 since it binds all addresses on that
+machine.
+
+==========
+
+2018-01-21	Jeffrey Lin
+Replace fd read/write with socket recv/send
+
+==========
+
+2018-01-20	Jeffrey Lin
+Refactor
+
+- add cleaner argument parsing using glibc's argp_parse
+
+- move client code {main => client}.c
+
+- client and server have separate signal handlers
+
+- binds to a random port if none is specified
+
+==========
+
+2018-01-20	Jeffrey Lin
+.h: add header guard
+
+==========
+
+2018-01-12	Arif Roktim
+Add ability to exit
+
+==========
+
+2018-01-12	Arif Roktim
+Made interprocess communication work
+
+==========
+
+2018-01-12	Arif Roktim
+Work on server client model
+
+Add server and client modes to binary
+
+==========
+
+2018-01-10	Jeffrey Lin
+Makefile: initial commit
+
+This Makefile simplifies building, debugging with clang and clang-tidy,
+cleaning, and running the output, as well as producing the devlog. It
+was designed with automatic dependency detection and ease of future
+expansion in mind.
+
+Hiding the echo commands through boolean short-circuiting makes debug
+info easier to read, but make the output a bit more confusing.
+
+==========
+
+2018-01-10	Arif Roktim
+Added boilerplate code.
+
+Initialize screen with ncurses and get input.
+
+==========
+
+2018-01-02	Jeffrey Lin
+housekeeping: add mkdevlog
+
+This script generates the DEVLOG file from git commit messages.
+
+==========
+
+2017-12-26	Arif Roktim
+Changes to DESIGN
+
+==========
+
+2017-12-24	Jeffrey Lin
+Edit DESIGN
+
+==========
+
+2017-12-22	aroktim@stuy.edu
+Initial commit
+
+==========
+
+2017-12-22	Arif Roktim
+Initial commit
+==========
+
