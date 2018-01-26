@@ -24,8 +24,17 @@ static void sighandler(int signo) {
   }
 }
 
+void destroy_screen() {
+  delwin(statusbarw);
+  delwin(commandlinew);
+  free(statusbarc);
+  free(commandlinec);
+  endwin(); // close window
+}
+
 void init_screen() {
   initscr();
+  atexit(destroy_screen);
 
   if (has_colors()) {
     start_color();
@@ -41,14 +50,6 @@ void init_screen() {
 
   statusbarc = malloc(sizeof(char) * col);
   commandlinec = malloc(sizeof(char) * col);
-}
-
-void destroy_screen() {
-  delwin(statusbarw);
-  delwin(commandlinew);
-  free(statusbarc);
-  free(commandlinec);
-  endwin(); // close window
 }
 
 void redraw_line(node *buf, int r, char m) {
