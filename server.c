@@ -1,6 +1,13 @@
 #include ".h"
 #include "networking.h"
 
+#define TOCLIENT 0
+#define FROMCLIENT 1
+
+int **fds;
+struct timeval sleeptimer = {0, 10000};
+
+
 static void sighandler(int signo) {
   switch (signo) {
     case SIGINT:
@@ -28,31 +35,32 @@ void subserver(int client_socket) {
 void server() {
   signal(SIGINT, sighandler);
   signal(SIGPIPE, SIG_IGN);
-  int listen_socket;
-  int client_socket;
-  int f;
-  int subserver_count = 0;
   char buffer[BUFFER_SIZE];
+  fds = calloc(2, sizeof(*fds));
+  int client_count;
+  int i;
 
   //set of file descriptors to read from
   fd_set read_fds;
 
-  listen_socket = server_setup();
+  fds[client_count][FROMCLIENT] = server_setup();
 
   while(loop) {
-
     //select() modifies read_fds
     //we must reset it at each iteration
     FD_ZERO(&read_fds); //0 out fd set
     FD_SET(STDIN_FILENO, &read_fds); //add stdin to fd set
-    FD_SET(listen_socket, &read_fds); //add socket to fd set
+    for (i = 0; i < client_count; i++) {
+      FD_SET(fds[client_count - 1][FROMCLIENT], &read_fds); //add socket
+    }
 
     //select will block until either fd is ready
-    select(listen_socket + 1, &read_fds, NULL, NULL, NULL);
+    select(fds[client_count][FROMCLIENT] + 1, &read_fds, NULL, NULL, &sleeptimer);
 
+    for (i = 0; i < 
     //if listen_socket triggered select
-    if (FD_ISSET(listen_socket, &read_fds)) {
-      client_socket = server_connect(listen_socket);
+    if (FD_ISSET(fds[client_count][FROMCLIENT], &read_fds)) {
+      fds[client_count][TOCLIENT] = server_connect(listen_socket);
 
       if (fork()) {
         subserver_count++;
