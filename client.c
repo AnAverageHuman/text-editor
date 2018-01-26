@@ -81,6 +81,11 @@ void client() {
   signal(SIGINT, sighandler);
   signal(SIGPIPE, SIG_IGN);
 
+  if (! isatty(1)) {
+    fprintf(stderr, "Not a TTY; bailing out.\n");
+    exit(1);
+  }
+
   currentnode = thebuffer = init_buffer(0, 1);
   if (arguments.filename) {
     read_into_buffer(thebuffer, arguments.filename);
