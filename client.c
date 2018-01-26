@@ -40,9 +40,10 @@ void init_screen() {
     start_color();
   }
   cbreak(); // Set terminal in RAW mode
+  nonl(); // enable getting input of enter
   noecho(); // Don't echo characters
   keypad(stdscr, TRUE); // Enable geting input of arrow keys
-  nodelay(stdscr, false);
+  halfdelay(2); // 1/5 of a second
 
   getmaxyx(stdscr, col, row);
   statusbarw = newwin(1, row - 2, 0, 0);
@@ -100,6 +101,13 @@ void client() {
 
   while (loop) {
     switch(ch[0] = getch()) {
+      case ERR:
+        break;
+      case KEY_ENTER:
+        currentnode = add_node(0, currentnode, currentnode->next, 0, 0, 0);
+        currentr++;
+        currentc = 0;
+        break;
       case KEY_UP:
         if (currentnode->prev) {
           currentr--;
