@@ -1,5 +1,7 @@
 #include ".h"
 
+#define REALLOC_CHUNK 256
+
 /* Simple buffer specification:
  * A buffer is a linked list structure, where each node represents a "line" of
  * text. Each node has a few attributes, including the contents (stored as a
@@ -26,8 +28,8 @@ node *add_node(node *buf, node *prev, node *next, char *contents,
 node *add_char_to_node(node *buf, char character, long long pos) {
   if (buf->length == buf->allocated) {
     buf->contents = realloc(buf->contents,
-        (buf->length + 1) * sizeof(buf->contents[0]));
-    buf->allocated++;
+        sizeof(buf->contents[0]) * (buf->allocated + REALLOC_CHUNK));
+    buf->allocated += REALLOC_CHUNK;
   }
 
   memmove(buf->contents + pos + 1, buf->contents + pos, buf->length - pos + 1);
