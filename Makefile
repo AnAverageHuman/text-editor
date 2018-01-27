@@ -1,7 +1,7 @@
 OBJDIR := build
 EXECUTABLE := text-editor
 CLEANTARGETS := $(OBJDIR) $(EXECUTABLE)
-GITVERSION := $(shell git describe --dirty --broken --tags --always)
+GITVERSION := $(shell git describe --dirty --broken --tags --always 2>/dev/null || echo unknown)
 
 SRC := $(wildcard *.c)
 OBJ := $(addprefix $(OBJDIR)/, $(SRC:.c=.o) gitversion.o)
@@ -48,7 +48,7 @@ devlog:
 	@$(Q)echo "  MKDEVLOG	DEVLOG"
 	@housekeeping/mkdevlog
 
-gitversion.c: .git/HEAD .git/index
+gitversion.c:
 	@$(Q)echo "  VERSION	$@"
 	@echo "const char *argp_program_version = \"$(GITVERSION)\";" > $@
 
