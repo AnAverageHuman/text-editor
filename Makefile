@@ -54,9 +54,9 @@ gitversion.c:
 
 $(EXECUTABLE): $(OBJ)
 	@$(Q)echo "  LD		$@"
-	@$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	@$(LINK.c) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 $(OBJDIR)/%.o: %.c
 	@$(Q)echo "  CC		$@"
-	@$(CC) $(CFLAGS) -c -o $@ $<
+	@$(COMPILE.c) $(OUTPUT_OPTION) $<
 
