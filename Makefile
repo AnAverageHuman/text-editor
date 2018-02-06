@@ -13,7 +13,7 @@ OBJ := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC) $(GITVFILE))
 
 LDLIBS := -lcurses
 CFLAGS ?= -O2 -march=native -pipe
-CPPFLAGS += -I $(INCDIR)
+CPPFLAGS += -I $(INCDIR) -MMD -MP
 LDFLAGS ?= -Wl,-O1 -Wl,--as-needed
 
 # echo all commands if $V is set; replacing echo commands with "true"
@@ -64,4 +64,6 @@ $(EXECUTABLE): $(OBJ)
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@$(Q)echo "  CC		$@"
 	@$(COMPILE.c) $(OUTPUT_OPTION) $<
+
+-include $(SRC:%.c=%.d)
 
