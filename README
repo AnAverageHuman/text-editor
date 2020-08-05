@@ -12,25 +12,17 @@ Requires the ncurses header files. On any system with apt:
 --------------------------------------------------------------------------------
 
 To build the project:
-$ make
-
-To debug Makefile statements:
-$ V=[...] make [...]
-or
-$ make V=[...] [...]
-The value of V does not matter.
-
-After a debug session, you must clean the project before rebuilding:
-$ make clean all
+$ meson build
+$ meson compile -C build
 
 --------------------------------------------------------------------------------
 
 To run the project:
-$ make run
+$ build/text-editor
 
 This presents the user with an empty buffer, in which they may write text.
 Alternatively, you may specify a filename:
-$ ./text-editor Makefile
+$ build/text-editor Makefile
 
 --------------------------------------------------------------------------------
 
